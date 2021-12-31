@@ -1,0 +1,29 @@
+{
+  "name": "books-library",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "node scripts/create-database.js",
+    "start": "nodemon -r dotenv/config index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaggieTheCoder/Book-library.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaggieTheCoder/Book-library/issues"
+  },
+  "homepage": "https://github.com/MaggieTheCoder/Book-library#readme",
+  "dependencies": {
+    "express": "^4.17.2",
+    "mysql2": "^2.3.3"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
