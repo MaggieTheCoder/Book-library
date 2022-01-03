@@ -22,7 +22,8 @@
   "homepage": "https://github.com/MaggieTheCoder/Book-library#readme",
   "dependencies": {
     "express": "^4.17.2",
-    "mysql2": "^2.3.3"
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.12.4"
   },
   "devDependencies": {
     "chai": "^4.3.4",
