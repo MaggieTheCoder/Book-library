@@ -44,7 +44,7 @@ describe("/readers", () => {
     });
 
     describe("GET /readers", () => {
-      xit("gets all readers records", async () => {
+      it("gets all readers records", async () => {
         const response = await request(app).get("/reader");
 
         expect(response.status).to.equal(200);
@@ -60,7 +60,7 @@ describe("/readers", () => {
     });
 
     describe("GET /readers/:id", () => {
-      xit("gets readers record by id", async () => {
+      it("gets readers record by id", async () => {
         const reader = readers[0];
         const response = await request(app).get(`/reader/${reader.id}`);
 
@@ -78,7 +78,7 @@ describe("/readers", () => {
     });
 
     describe("PATCH /readers/:id", () => {
-      xit("updates readers email by id", async () => {
+      it("updates readers email by id", async () => {
         const reader = readers[0];
         const response = await request(app)
           .patch(`/reader/${reader.id}`)
@@ -102,7 +102,7 @@ describe("/readers", () => {
       });
     });
     describe("DELETE /readers/:id", () => {
-      xit("deletes reader record by id", async () => {
+      it("deletes reader record by id", async () => {
         const reader = readers[0];
         const response = await request(app).delete(`/reader/${reader.id}`);
         const deletedReader = await Reader.findByPk(reader.id, { raw: true });
