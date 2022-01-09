@@ -1,30 +1,33 @@
 const { expect } = require("chai");
 const request = require("supertest");
 const { Reader } = require("../src/models");
+const { beforeEach } = require("mocha");
 const app = require("../src/app");
 
 describe("/readers", () => {
-  before(async () => Reader.sequelize.sync()); // connect to Reader table
+  before(async () => Reader.sequelize.sync());
 
   beforeEach(async () => {
-    await Reader.destroy({ where: {} }); //cleans out the reader table so no interference from previous tests
+    await Reader.destroy({ where: {} });
   });
 
   describe("with no records in the database", () => {
-    describe("POST /readers", () => {
-      it("creates a new reader in the database", async () => {
-        const response = await request(app).post("/readers").send({
+    describe("POST /reader", () => {
+      xit("creates a new reader in the database", async () => {
+        const response = await request(app).post("/reader").send({
           name: "Elizabeth Bennet",
-          email: "msdarcy@gmail.com",
+          email: "future_ms_darcy@gmail.com",
+          password: "password",
         });
-        expect(response.status).to.equal(201);
-
         const newReaderRecord = await Reader.findByPk(response.body.id, {
           raw: true,
         });
+
+        expect(response.status).to.equal(201);
         expect(response.body.name).to.equal("Elizabeth Bennet");
         expect(newReaderRecord.name).to.equal("Elizabeth Bennet");
-        expect(newReaderRecord.email).to.equal("msdarcy@gmail.com");
+        expect(newReaderRecord.email).to.equal("future_ms_darcy@gmail.com");
+        expect(newReaderRecord.password).to.equal("password");
       });
     });
   });
@@ -36,10 +39,19 @@ describe("/readers", () => {
       readers = await Promise.all([
         Reader.create({
           name: "Elizabeth Bennet",
-          email: "msdarcy@gmail.com",
+          email: "future_ms_darcy@gmail.com",
+          password: "password",
         }),
-        Reader.create({ name: "Arya Stark", email: "astark@gmail.com" }),
-        Reader.create({ name: "Lyra Belacqua", email: "darknorth@gmail.com" }),
+        Reader.create({
+          name: "Arya Stark",
+          email: "vmorgul@me.com",
+          password: "password",
+        }),
+        Reader.create({
+          name: "Lyra Belacqua",
+          email: "darknorth123@msn.org",
+          password: "password",
+        }),
       ]);
     });
 
@@ -55,11 +67,12 @@ describe("/readers", () => {
 
           expect(reader.name).to.equal(expected.name);
           expect(reader.email).to.equal(expected.email);
+          expect(reader.password).to.equal(expected.password);
         });
       });
     });
 
-    describe("GET /readers/:id", () => {
+    describe("GET /reader/:id", () => {
       it("gets readers record by id", async () => {
         const reader = readers[0];
         const response = await request(app).get(`/reader/${reader.id}`);
@@ -67,9 +80,10 @@ describe("/readers", () => {
         expect(response.status).to.equal(200);
         expect(response.body.name).to.equal(reader.name);
         expect(response.body.email).to.equal(reader.email);
+        expect(response.body.password).to.equal(reader.password);
       });
 
-      xit("returns a 404 if the reader does not exist", async () => {
+      it("returns a 404 if the reader does not exist", async () => {
         const response = await request(app).get("/reader/12345");
 
         expect(response.status).to.equal(404);
@@ -77,31 +91,31 @@ describe("/readers", () => {
       });
     });
 
-    describe("PATCH /readers/:id", () => {
+    describe("PATCH /reader/:id", () => {
       it("updates readers email by id", async () => {
         const reader = readers[0];
         const response = await request(app)
           .patch(`/reader/${reader.id}`)
-          .send({ email: "missBennet@gmail.com" });
-
+          .send({ email: "miss_e_bennet@gmail.com" });
         const updatedReaderRecord = await Reader.findByPk(reader.id, {
           raw: true,
         });
 
         expect(response.status).to.equal(200);
-        expect(updatedReaderRecord.email).to.equal("missBennet@gmail.com");
+        expect(updatedReaderRecord.email).to.equal("miss_e_bennet@gmail.com");
       });
 
-      xit("returns a 404 if the reader does not exist", async () => {
+      it("returns a 404 if the reader does not exist", async () => {
         const response = await request(app)
           .patch("/reader/12345")
-          .send({ email: "noob@gmailm.com" });
+          .send({ email: "some_new_email@gmail.com" });
 
         expect(response.status).to.equal(404);
-        expect(response.body.error).to.equal("The reader could not be found");
+        expect(response.body.error).to.equal("The reader could not be found.");
       });
     });
-    describe("DELETE /readers/:id", () => {
+
+    describe("DELETE /reader/:id", () => {
       it("deletes reader record by id", async () => {
         const reader = readers[0];
         const response = await request(app).delete(`/reader/${reader.id}`);
@@ -110,8 +124,9 @@ describe("/readers", () => {
         expect(response.status).to.equal(204);
         expect(deletedReader).to.equal(null);
       });
-      xit("returns a 404 if the reader does not exist", async () => {
-        const response = await request(app).delete("/readers/12345");
+
+      it("returns a 404 if the reader does not exist", async () => {
+        const response = await request(app).delete("/reader/12345");
         expect(response.status).to.equal(404);
         expect(response.body.error).to.equal("The reader could not be found.");
       });

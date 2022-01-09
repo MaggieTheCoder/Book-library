@@ -56,10 +56,10 @@ exports.Delete = async (req, res) => {
   const deletedRows = await Reader.destroy({ where: { id: readerId } });
 
   try {
-    if (!deletedRows) {
-      res.status(404).json({ error: "Reader not found" });
+    if (deletedRows) {
+      res.status(204).send("Reader deleted");
     } else {
-      res.status(204).json({ message: "Reader deleted" });
+      res.status(404).json({ error: "The reader could not be found." });
     }
   } catch (err) {
     res.status(500).send(err);

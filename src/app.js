@@ -1,6 +1,6 @@
 const express = require("express");
-const ReaderController = require("./controllers/reader");
-const { Reader } = require("./models");
+const ReaderRouter = require("./routes/reader");
+const BookRouter = require("./routes/book");
 
 const app = express();
 
@@ -10,14 +10,6 @@ app.get("/", (req, res) => {
   res.status(200).send("You've hit root!");
 });
 
-app.post("/readers", ReaderController.create);
-
-app.get("/reader", ReaderController.allReaders);
-
-app.get("/reader/:id", ReaderController.SingleReaderId);
-
-app.patch("/reader/:id", ReaderController.Update);
-
-app.delete("/reader/:id", ReaderController.Delete);
+app.use(ReaderRouter, BookRouter);
 
 module.exports = app;
