@@ -53,3 +53,18 @@ exports.UpdateBook = async (req, res) => {
     res.status(500).send(err);
   }
 };
+
+exports.DeleteBook = async (req, res) => {
+  const bookID = req.params.id;
+  const deletedRows = await Book.destroy({ where: { id: bookID } });
+
+  try {
+    if (deletedRows) {
+      res.status(204).send("Book is deleted");
+    } else {
+      res.status(404).json({ error: "The book could not be found." });
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+};
