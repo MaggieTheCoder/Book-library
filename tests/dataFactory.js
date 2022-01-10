@@ -7,6 +7,12 @@ const bookData = () => ({
   ISBN: faker.datatype.string(13),
 });
 
+const bookArray = [];
+for (let i = 0; i < 3; i++) {
+  bookArray.push(bookData());
+}
+
 module.exports = {
   bookData,
+  bookArray,
 };

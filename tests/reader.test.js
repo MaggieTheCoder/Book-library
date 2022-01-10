@@ -12,9 +12,9 @@ describe("/readers", () => {
   });
 
   describe("with no records in the database", () => {
-    describe("POST /reader", () => {
+    describe("POST /readers", () => {
       xit("creates a new reader in the database", async () => {
-        const response = await request(app).post("/reader").send({
+        const response = await request(app).post("/readers").send({
           name: "Elizabeth Bennet",
           email: "future_ms_darcy@gmail.com",
           password: "password",
