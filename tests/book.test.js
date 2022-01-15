@@ -1,6 +1,6 @@
 const request = require("supertest");
 const { expect } = require("chai");
-const { Book, Reader } = require("../src/models");
+const { Book } = require("../src/models");
 const { beforeEach } = require("mocha");
 const app = require("../src/app");
 const dataFactory = require("./dataFactory");

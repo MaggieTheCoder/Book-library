@@ -3,6 +3,7 @@ const request = require("supertest");
 const { Reader } = require("../src/models");
 const { beforeEach } = require("mocha");
 const app = require("../src/app");
+const { getMaxListeners } = require("../src/app");
 
 describe("/readers", () => {
   before(async () => Reader.sequelize.sync());
@@ -13,7 +14,7 @@ describe("/readers", () => {
 
   describe("with no records in the database", () => {
     describe("POST /readers", () => {
-      xit("creates a new reader in the database", async () => {
+      it("creates a new reader in the database", async () => {
         const response = await request(app).post("/readers").send({
           name: "Elizabeth Bennet",
           email: "future_ms_darcy@gmail.com",
@@ -28,6 +29,64 @@ describe("/readers", () => {
         expect(newReaderRecord.name).to.equal("Elizabeth Bennet");
         expect(newReaderRecord.email).to.equal("future_ms_darcy@gmail.com");
         expect(newReaderRecord.password).to.equal("password");
+      });
+      it("should not allow an empty name field", async () => {
+        const reader = {
+          name: "",
+          email: "joker@gmail.com",
+          password: "21SilverRings!",
+        };
+
+        const response = await request(app).post("/readers").send(reader);
+
+        expect(response.status).to.equal(400);
+      });
+
+      it("should throw error if an incorrect email address has been provided", async () => {
+        const reader = {
+          name: "Magic Maggie",
+          email: "jokeratgmail.com",
+          password: "21SilverRings!",
+        };
+
+        const response = await request(app).post("/readers").send(reader);
+
+        expect(response.status).to.equal(400);
+      });
+
+      it("should error if email field is empty", async () => {
+        const reader = {
+          name: "Magic Maggie",
+          email: "",
+          password: "21SilverRingsGleam!",
+        };
+
+        const response = await request(app).post("/readers").send(reader);
+
+        expect(response.status).to.equal(400);
+      });
+
+      it("should throw an error if password length is less than 8 characters", async () => {
+        const reader = {
+          name: "Emily Blunt",
+          email: "bluntEdge@gmail.com",
+          password: "Emily",
+        };
+
+        const response = await request(app).post("/readers").send(reader);
+
+        expect(response.status).to.equal(400);
+      });
+
+      it("should error if password field is empty", async () => {
+        const reader = {
+          name: "Emily Blunt",
+          email: "bluntEdge@gmail.com",
+          password: "",
+        };
+        const response = await request(app).post("/readers").send(reader);
+
+        expect(response.status).to.equal(400);
       });
     });
   });
